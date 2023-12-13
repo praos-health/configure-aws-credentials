@@ -9,6 +9,14 @@ calls.
 
 ### Recent News
 
+#### Long-term credentials warning (10/3/23)
+
+We have added a warning when using long-term credentials to access AWS
+(IAM access keys and secret keys). Using long-term credentials requires you
+to create IAM users and properly secure the access keys to prevent their disclosure.
+A better approach is to use [GitHub's support for OpenID Connect](#OIDC) to authenticate
+using an IAM role to generate temporary security credentials.
+
 #### v4 Announcement (9/11/23)
 
 We have just released `v4` of Configure AWS Credentials. The only thing that
@@ -98,7 +106,7 @@ To do that, you would add the following step to your workflow:
 This will cause the action to perform an [`AssumeRoleWithWebIdentity`](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRoleWithWebIdentity.html) call and
 return temporary security credentials for use by other steps in your workflow. In order for
 this to work, you'll need to preconfigure the IAM Identity Provider in your AWS account
-(see [Assuming a Role](#assuming-a-role) for details).
+(see the [OIDC](https://github.com/aws-actions/configure-aws-credentials#OIDC) section below for details).
 
 You can use this action with the AWS CLI available in
 [GitHub's hosted virtual environments](https://help.github.com/en/actions/reference/software-installed-on-github-hosted-runners) or run this action multiple times
@@ -143,7 +151,7 @@ and outputs.
 
 Some of this documentation may be inaccurate if you are using GHES (GitHub Enterprise Servers), please take note to review the GitHub documentation when relevant.
 
-For example, the URL that the OIDC JWT is issued from is different than the usual `tokens.actions.githubusercontent.com`, and will be unique to your enterprise server. As a result, you will need to configure this differently when you create the Identity Provider.
+For example, the URL that the OIDC JWT is issued from is different than the usual `token.actions.githubusercontent.com`, and will be unique to your enterprise server. As a result, you will need to configure this differently when you create the Identity Provider.
 
 ## Security recommendations
 
@@ -317,7 +325,7 @@ created once per account (i.e. multiple IAM Roles that can be assumed by the
 GitHub's OIDC can share a single OIDC Provider).
 
 Note that the thumbprint has been set to all F's because the thumbprint is not
-used when authenticating `tokens.actions.githubusercontent.com`. Instead, IAM
+used when authenticating `token.actions.githubusercontent.com`. Instead, IAM
 uses its library of trusted CAs to authenticate. However, this value is still
 required by the API.
 
